@@ -73,7 +73,7 @@ public:
             usPixelTime = _usPixelTime400mhz;
         }
 #endif
-        return (delta >= 50L && delta <= (4294967296L - (usPixelTime * _countPixels)));
+        return delta >= 50L;
     }
     void ClearTo(uint8_t r, uint8_t g, uint8_t b);
     void ClearTo(RgbColor c)
