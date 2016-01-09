@@ -83,6 +83,10 @@ struct RgbColor
     // ------------------------------------------------------------------------
 	void Lighten(uint8_t delta);
 
+	bool operator==(const RgbColor &other) const {
+		return (this->R == other.R && this->G == other.G && this->B == other.B);
+	}
+
     // ------------------------------------------------------------------------
     // LinearBlend between two colors by the amount defined by progress variable
     // left - the color to start the blend at
