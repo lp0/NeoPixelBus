@@ -124,12 +124,12 @@ private:
         UpdatePixelColor(n, c.R, c.G, c.B);
     };
 
-    const uint32_t _usPixelTime800mhz = 30; // us it takes to send a single pixel at 800mhz speed
+    static const uint32_t _usPixelTime800mhz = 30; // us it takes to send a single pixel at 800mhz speed
 #ifdef INCLUDE_NEO_KHZ400_SUPPORT
-    const uint32_t _usPixelTime400mhz = 60; // us it takes to send a single pixel at 800mhz speed
+    static const uint32_t _usPixelTime400mhz = 60; // us it takes to send a single pixel at 800mhz speed
 #endif
-    const uint16_t    _countPixels;     // Number of RGB LEDs in strip
-    const uint16_t    _sizePixels;      // Size of '_pixels' buffer below
+    uint16_t    _countPixels;     // Number of RGB LEDs in strip
+    uint16_t    _sizePixels;      // Size of '_pixels' buffer below
     
     uint8_t _flagsPixels;    // Pixel flags (400 vs 800 KHz, RGB vs GRB color)
     uint8_t* _pixels;        // Holds LED color values (3 bytes each)
