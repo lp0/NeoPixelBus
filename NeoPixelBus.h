@@ -53,12 +53,20 @@ public:
     // NOTE:  Pin Number is ignored in this version due to use of hardware UART
     // but it is left in the argument list for easy switching between versions of the library
     NeoPixelBus(uint16_t n, uint8_t p, uint8_t t = NEO_GRB | NEO_KHZ800);
+    NeoPixelBus();
     ~NeoPixelBus();
 
     inline uint16_t getPixelCount()
     {
         return _countPixels;
     }
+
+    void setPixelCount(uint16_t n);
+
+    void setType(uint8_t t)
+    {
+        _flagsPixels = t;
+    };
 
     void Begin();
     void Show();

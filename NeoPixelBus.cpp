@@ -52,17 +52,38 @@ NeoPixelBus::NeoPixelBus(uint16_t n, uint8_t p, uint8_t t) :
     _sizePixels(n * 3), 
     _flagsPixels(t)
 {
-    _pixels = (uint8_t *)malloc(_sizePixels);
+    _pixels = _sizePixels ? (uint8_t *)malloc(_sizePixels) : nullptr;
     if (_pixels) 
     {
         memset(_pixels, 0, _sizePixels);
     }
 }
 
+NeoPixelBus::NeoPixelBus() :
+    _countPixels(0),
+    _sizePixels(0),
+    _flagsPixels(0)
+{
+}
+
 NeoPixelBus::~NeoPixelBus() 
 {
     if (_pixels) 
         free(_pixels);
+}
+
+void NeoPixelBus::setPixelCount(uint16_t n)
+{
+    _countPixels = n;
+    _sizePixels = n * 3;
+    if (_pixels)
+        free(_pixels);
+
+    _pixels = _sizePixels ? (uint8_t *)malloc(_sizePixels) : nullptr;
+    if (_pixels)
+    {
+        memset(_pixels, 0, _sizePixels);
+    }
 }
 
 void NeoPixelBus::Begin(void) 
