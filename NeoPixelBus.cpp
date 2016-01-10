@@ -101,6 +101,9 @@ void NeoPixelBus::Begin(void)
 
 #endif
 
+    _refreshTime = millis();
+    _endTime = micros();
+
     Serial1.begin(baud, SERIAL_6N1, SERIAL_TX_ONLY);
 
     CLEAR_PERI_REG_MASK(UART_CONF0(UART), UART_INV_MASK);

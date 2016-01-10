@@ -91,7 +91,8 @@ public:
 
     bool IsDirty() const
     {
-        return  (_flagsPixels & NEO_DIRTY);
+        /* refresh every second just in case something doesn't update correctly */
+        return  (_flagsPixels & NEO_DIRTY) || millis() - _refreshTime >= 1000;
     };
     void Dirty()
     {
@@ -100,6 +101,7 @@ public:
     void ResetDirty()
     {
         _flagsPixels &= ~NEO_DIRTY;
+        _refreshTime = millis();
     }
 
     uint8_t* Pixels() const
@@ -138,5 +140,6 @@ private:
     uint8_t _flagsPixels;    // Pixel flags (400 vs 800 KHz, RGB vs GRB color)
     uint8_t* _pixels;        // Holds LED color values (3 bytes each)
     uint32_t _endTime;       // Latch timing reference
+    uint32_t _refreshTime;
 };
 
