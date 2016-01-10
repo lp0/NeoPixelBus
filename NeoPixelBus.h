@@ -102,10 +102,6 @@ public:
         _flagsPixels &= ~NEO_DIRTY;
     }
 
-    bool IsIrqLocking() const
-    {
-        return  (_flagsPixels & NEO_IRQLOCK);
-    };
     uint8_t* Pixels() const
     {
         return _pixels;
@@ -134,7 +130,7 @@ private:
 
     static const uint32_t _usPixelTime800mhz = 30; // us it takes to send a single pixel at 800mhz speed
 #ifdef INCLUDE_NEO_KHZ400_SUPPORT
-    static const uint32_t _usPixelTime400mhz = 60; // us it takes to send a single pixel at 800mhz speed
+    static const uint32_t _usPixelTime400mhz = 60; // us it takes to send a single pixel at 400mhz speed
 #endif
     uint16_t    _countPixels;     // Number of RGB LEDs in strip
     uint16_t    _sizePixels;      // Size of '_pixels' buffer below

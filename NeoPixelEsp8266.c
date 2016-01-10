@@ -20,10 +20,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <Arduino.h>
 #include <eagle_soc.h>
 
-void ICACHE_RAM_ATTR esp8266_uart1_send_pixels(uint8_t* pixels, uint8_t* end, bool isIrqLocking)
+#define NEO_KHZ800  0x02 // 800 KHz datastream
+#define NEO_IRQLOCK 0x40 // IRQs will be locked on uart fifo writing
+
+void ICACHE_RAM_ATTR esp8266_uart1_send_pixels(uint8_t* pixels, uint8_t* end, uint8_t flags)
 {
     const uint8_t _uartData[4] = { 0b00110111, 0b00000111, 0b00110100, 0b00000100 };
     const uint8_t _uartFifoTrigger = 124; // tx fifo should be 128 bytes. minus the four we need to send
+    uint32_t savedPS;
+    int i;
 
     do
     {
@@ -32,12 +37,11 @@ void ICACHE_RAM_ATTR esp8266_uart1_send_pixels(uint8_t* pixels, uint8_t* end, bo
             _uartData[(subpix >> 4) & 3], 
             _uartData[(subpix >> 2) & 3], 
             _uartData[subpix & 3] };
-        uint32_t savedPS;
 
         // now wait till this the FIFO buffer has room to send more
         while (((U1S >> USTXC) & 0xff) > _uartFifoTrigger);
 
-        if (isIrqLocking)
+        if (flags & NEO_IRQLOCK)
         {
             savedPS = xt_rsil(15); // stop other interrupts
         }
@@ -48,11 +52,31 @@ void ICACHE_RAM_ATTR esp8266_uart1_send_pixels(uint8_t* pixels, uint8_t* end, bo
             U1F = buf[i];
         }
 
-        if (isIrqLocking)
+        if (flags & NEO_IRQLOCK)
         {
             xt_wsr_ps(savedPS); // reenable other interrupts
         }
 
     } while (pixels < end);
+
+    // append 50us data latch to the buffer to ensure correct timing
+    for (i = 0; i < ((flags & NEO_KHZ800) ? 20 : 10); i++) {
+        while (((U1S >> USTXC) & 0xff) > _uartFifoTrigger);
+
+        if (flags & NEO_IRQLOCK)
+        {
+            savedPS = xt_rsil(15); // stop other interrupts
+        }
+
+        U1F = 0;
+        U1F = 0;
+        U1F = 0;
+        U1F = 0;
+
+        if (flags & NEO_IRQLOCK)
+        {
+            xt_wsr_ps(savedPS); // reenable other interrupts
+        }
+    }
 }
 

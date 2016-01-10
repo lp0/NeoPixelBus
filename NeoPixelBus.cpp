@@ -42,7 +42,7 @@ extern "C"
 
 // due to linker overriding ICACHE_RAM_ATTR for cpp files, this function was
 // moved into a NeoPixelEsp8266.c file.
-extern "C" void ICACHE_RAM_ATTR esp8266_uart1_send_pixels(uint8_t* pixels, uint8_t* end, bool isIrqLocking);
+extern "C" void ICACHE_RAM_ATTR esp8266_uart1_send_pixels(uint8_t* pixels, uint8_t* end, uint8_t flags);
 
 #define UART_INV_MASK  (0x3f<<19)  
 #define UART 1
@@ -146,7 +146,7 @@ void NeoPixelBus::Show(void)
     
 
     // esp hardware uart sending of data
-    esp8266_uart1_send_pixels(_pixels, _pixels + _sizePixels, IsIrqLocking());
+    esp8266_uart1_send_pixels(_pixels, _pixels + _sizePixels, _flagsPixels);
 
     ResetDirty();
 }
