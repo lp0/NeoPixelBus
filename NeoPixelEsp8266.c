@@ -59,24 +59,7 @@ void ICACHE_RAM_ATTR esp8266_uart1_send_pixels(uint8_t* pixels, uint8_t* end, ui
 
     } while (pixels < end);
 
-    // append 50us data latch to the buffer to ensure correct timing
-    for (i = 0; i < ((flags & NEO_KHZ800) ? 20 : 10); i++) {
-        while (((U1S >> USTXC) & 0xff) > _uartFifoTrigger);
-
-        if (flags & NEO_IRQLOCK)
-        {
-            savedPS = xt_rsil(15); // stop other interrupts
-        }
-
-        U1F = 0;
-        U1F = 0;
-        U1F = 0;
-        U1F = 0;
-
-        if (flags & NEO_IRQLOCK)
-        {
-            xt_wsr_ps(savedPS); // reenable other interrupts
-        }
-    }
+    // wait for transmission to finish to ensure correct timing
+    while (((U1S >> USTXC) & 0xff) > 0);
 }
 

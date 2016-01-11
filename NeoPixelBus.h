@@ -72,16 +72,7 @@ public:
     void Show();
     inline bool CanShow(void) const
     { 
-        uint32_t delta = micros() - _endTime;
-        uint32_t usPixelTime = _usPixelTime800mhz;
-
-#ifdef INCLUDE_NEO_KHZ400_SUPPORT
-        if ((_flagsPixels & NEO_SPDMASK) == NEO_KHZ400)
-        {
-            usPixelTime = _usPixelTime400mhz;
-        }
-#endif
-        return delta >= 50L;
+        return (micros() - _endTime) >= 50L;
     }
     void ClearTo(uint8_t r, uint8_t g, uint8_t b);
     void ClearTo(RgbColor c)
@@ -130,10 +121,6 @@ private:
         UpdatePixelColor(n, c.R, c.G, c.B);
     };
 
-    static const uint32_t _usPixelTime800mhz = 30; // us it takes to send a single pixel at 800mhz speed
-#ifdef INCLUDE_NEO_KHZ400_SUPPORT
-    static const uint32_t _usPixelTime400mhz = 60; // us it takes to send a single pixel at 400mhz speed
-#endif
     uint16_t    _countPixels;     // Number of RGB LEDs in strip
     uint16_t    _sizePixels;      // Size of '_pixels' buffer below
     
