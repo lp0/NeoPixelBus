@@ -128,5 +128,7 @@ private:
     uint8_t* _pixels;        // Holds LED color values (3 bytes each)
     uint32_t _endTime;       // Latch timing reference
     uint32_t _refreshTime;
+
+    uint8_t _fifoBurst[128];
 };
 
